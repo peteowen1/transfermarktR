@@ -51,7 +51,7 @@ get_transfers = function(url, season = NULL, include_end_of_loans = TRUE, includ
         rvest::html_table(trim = TRUE, fill = TRUE) %>%
 
         #For each of the tables we standardize and clean the columns and names to be able to simultaneously use the Out and In table:
-        purrr::map_df(function(table){
+        furrr:future_map_df(function(table){
 
           transfer_direction = ifelse("Out" %in% colnames(table), "Out", "In")
           colnames(table) = c("Player", "Age", "Nationality", "Position", "Position_Code", "Market_Value", "nada", "To_From", "Fee")
@@ -116,7 +116,7 @@ get_transfers = function(url, season = NULL, include_end_of_loans = TRUE, includ
 
   #Adding the club name to each data-frame:
 
-  purrr::map_df(seq_along(clubs), function(i){
+  furrr::future_map_df(seq_along(clubs), function(i){
 
     all_tables_in_out_transfers[[i]] %>%
       dplyr::mutate(Club = clubs[i],
